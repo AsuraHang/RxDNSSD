@@ -236,19 +236,13 @@ public abstract class DNSSD implements InternalDNSSDService.DnssdServiceListener
                 final String hostNameStr =  new String(hostName, UTF_8);
                 final Map<String, String> record = parseTXTRecords(txtRecord);
                 handler.removeCallbacks(timeoutRunnable);
-                handler.post(() -> {
-                    listener.serviceResolved(services[0], flags, ifIndex, fullNameStr, hostNameStr, port, record);
-                    services[0].stop();
-                });
+                handler.post(() -> listener.serviceResolved(services[0], flags, ifIndex, fullNameStr, hostNameStr, port, record));
             }
 
             @Override
             public void operationFailed(final DNSSDService service, final int errorCode) {
                 handler.removeCallbacks(timeoutRunnable);
-                handler.post(() -> {
-                    listener.operationFailed(services[0], errorCode);
-                    services[0].stop();
-                });
+                handler.post(() -> listener.operationFailed(services[0], errorCode));
             }
         }));
 
@@ -419,19 +413,13 @@ public abstract class DNSSD implements InternalDNSSDService.DnssdServiceListener
             public void queryAnswered(DNSSDService query, final int flags, final int ifIndex, byte[] fullName, final int rrtype, final int rrclass, byte[] rdata, final int ttl) {
                 final String fullNameStr = new String(fullName, UTF_8);
                 handler.removeCallbacks(timeoutRunnable);
-                handler.post(() -> {
-                    listener.queryAnswered(services[0], flags, ifIndex, fullNameStr, rrtype, rrclass, rdata, ttl);
-                    services[0].stop();
-                });
+                handler.post(() -> listener.queryAnswered(services[0], flags, ifIndex, fullNameStr, rrtype, rrclass, rdata, ttl));
             }
 
             @Override
             public void operationFailed(DNSSDService service, final int errorCode) {
                 handler.removeCallbacks(timeoutRunnable);
-                handler.post(() -> {
-                    listener.operationFailed(services[0], errorCode);
-                    services[0].stop();
-                });
+                handler.post(() -> listener.operationFailed(services[0], errorCode));
             }
         }));
 
